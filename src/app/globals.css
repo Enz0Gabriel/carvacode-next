@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/* -------------------------
+   0) Variáveis globais + Aliases
+   ------------------------- */
+:root {
+  /* Brand Colors */
+  --color-primary-blue: #00a8e8;        /* hsl(196 81% 51%) */
+  --color-primary-blue-glow: #33baf0;   /* hsl(196 81% 61%) */
+  --color-primary-blue-dark: #0084b3;
+  --color-accent-coral: #ff694d;        /* hsl(13 100% 64%) */
+  --color-warm-orange: #ff9d40;         /* hsl(32 100% 62%) */
+
+  /* Backgrounds */
+  --color-bg-deep-start: #0c1216;       /* hsl(210 31% 6%) */
+  --color-bg-deep-end: #121a22;         /* hsl(213 38% 9%) */
+
+  /* Aliases (compatibilidade) */
+  --primary-blue: var(--color-primary-blue);
+  --primary-blue-glow: var(--color-primary-blue-glow);
+  --primary: var(--color-primary-blue);
+  --accent-coral: var(--color-accent-coral);
+  --warm-orange: var(--color-warm-orange);
+  --accent: var(--color-accent-coral);
+  --bg-deep-start: var(--color-bg-deep-start);
+  --bg-deep-end: var(--color-bg-deep-end);
+
+  /* Fallbacks antigos */
+  --primary-500: var(--color-primary-blue);
+  --accent-500: var(--color-accent-coral);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--color-primary-blue),
+    var(--color-primary-blue-glow)
+  );
+  --gradient-hero: linear-gradient(135deg, var(--color-bg-deep-start), var(--color-bg-deep-end));
+  --gradient-accent: linear-gradient(135deg, var(--color-accent-coral), var(--color-warm-orange));
+  --gradient-glass: linear-gradient(145deg, #ffffff0f, #ffffff08);
+
+  /* Shadows */
+  --shadow-glow-blue: 0 0 40px #00a8e847;
+  --shadow-glow-coral: 0 10px 40px #ff694d24;
+}
+
+/* -------------------------
+   1) Tokens de Tema (Tailwind v4)
+   ------------------------- */
+@theme {
+  --color-primary-blue: var(--color-primary-blue);
+  --color-primary-blue-glow: var(--color-primary-blue-glow);
+  --color-accent-coral: var(--color-accent-coral);
+  --color-warm-orange: var(--color-warm-orange);
+
+  --color-bg-deep-start: var(--color-bg-deep-start);
+  --color-bg-deep-end: var(--color-bg-deep-end);
+
+  --color-background: #ffffff;
+  --color-foreground: #121a22;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #121a22;
+
+  --color-border: #e4eaf5;  /* hsl(214 32% 91%) */
+  --color-input: #e4eaf5;
+  --color-ring: var(--color-primary-blue);
+
+  --radius: 1rem;
+}
+
+/* -------------------------
+   2) Dark Theme Overrides
+   ------------------------- */
+.dark {
+  --color-background: #0c1216;
+  --color-foreground: #fafafa;
+
+  --color-card: #121a22;
+  --color-card-foreground: #fafafa;
+
+  --color-border: #242c35;  /* hsl(213 25% 15%) */
+  --color-input: #242c35;
+  --color-ring: var(--color-primary-blue);
+}
+
+/* -------------------------
+   3) Base Reset
+   ------------------------- */
+@layer base {
+  * {
+    border-color: var(--color-border);
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* -------------------------
+   4) Utilitários custom
+   ------------------------- */
+@layer utilities {
+  .hero-gradient {
+    background: var(--gradient-hero);
+    background-attachment: fixed;
+  }
+
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(0deg, #ffffff05 1px, transparent 1px),
+      linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.18;
+  }
+
+  .glass-card {
+    background:
+      radial-gradient(1200px 400px at 20% 20%, #ff8c5005, transparent),
+      var(--gradient-glass);
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+    border: 1px solid #ffffff0a;
+    box-shadow:
+      0 10px 30px #00000099,
+      0 1px 0 #ffffff05 inset;
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+  }
+  .glass-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 18px 44px #000000b3,
+      0 1px 0 #ffffff05 inset,
+      var(--shadow-glow-coral);
+  }
+
+  .rounded-3xl { border-radius: 28px; }
+  .rounded-4xl { border-radius: 36px; }
+
+  .glow-blue { box-shadow: var(--shadow-glow-blue); }
+  .glow-coral { box-shadow: var(--shadow-glow-coral); }
+
+  .bg-primary-blue-10 { background-color: color-mix(in srgb, var(--color-primary-blue) 8%, transparent); }
+  .bg-primary-blue-20 { background-color: color-mix(in srgb, var(--color-primary-blue) 18%, transparent); }
+  .bg-accent-coral-10 { background-color: color-mix(in srgb, var(--color-accent-coral) 8%, transparent); }
+  .bg-accent-coral-20 { background-color: color-mix(in srgb, var(--color-accent-coral) 18%, transparent); }
+
+  .text-primary-blue { color: var(--color-primary-blue); }
+  .text-accent-coral { color: var(--color-accent-coral); }
+
+  .btn-cta {
+    background: linear-gradient(90deg, var(--color-warm-orange), var(--color-accent-coral));
+    color: white;
+    border-radius: 9999px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: 0 8px 30px #ff8c501f;
+    border: 1px solid #ffffff0f;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px #ff8c5024;
+  }
+
+  .btn-coral {
+    background: linear-gradient(90deg, var(--color-accent-coral), var(--color-warm-orange));
+    color: white;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    border: none;
+    transition: transform .14s ease;
+  }
+  .btn-coral:hover { transform: translateY(-2px); }
+
+  .card-inner-highlight {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-inner-highlight::after {
+    content: "";
+    position: absolute;
+    right: -30%;
+    top: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(closest-side, #ff78500f, transparent 40%);
+    pointer-events: none;
+    filter: blur(40px);
+  }
+
+  /* =========================
+     LINKS COM UNDERLINE AZUL
+     ========================= */
+  .link-underline {
+    position: relative;
+  }
+
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--color-primary-blue);
+    transition: width 0.3s ease;
+  }
+
+  .link-underline:hover::after {
+    width: 100%;
+  }
+}
