@@ -296,7 +296,7 @@ const Hero: React.FC = () => {
         >
           <button
             onClick={handleScrollDown}
-            className="flex flex-col items-center gap-2 text-white/60 hover:text-white transition-colors duration-300 group"
+            className="flex flex-col items-center gap-2 text-white/60 hover:text-white transition-colors duration-300 group cursor-pointer"
           >
             <span className="text-sm">Explore mais</span>
             <ArrowDown className="w-6 h-6 animate-bounce group-hover:text-primary-blue transition-colors" />

@@ -23,7 +23,9 @@ const Contact: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -34,12 +36,11 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simula envio
     await new Promise(resolve => setTimeout(resolve, 800));
 
     toast({
-      title: "Mensagem enviada!",
-      description: "Obrigado pelo contato. Responderemos em breve!",
+      title: 'Mensagem enviada!',
+      description: 'Obrigado pelo contato. Responderemos em breve!'
     });
 
     setFormData({
@@ -54,7 +55,11 @@ const Contact: React.FC = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(`Olá! Meu nome é ${formData.name || '[Seu Nome]'}. Gostaria de conversar sobre meu projeto: ${formData.project || '[Descrição do projeto]'}. Orçamento estimado: ${formData.budget || '[Valor aproximado]'}`);
+    const message = encodeURIComponent(
+      `Olá! Meu nome é ${formData.name || '[Seu Nome]'}. Gostaria de conversar sobre meu projeto: ${
+        formData.project || '[Descrição do projeto]'
+      }. Orçamento estimado: ${formData.budget || '[Valor aproximado]'}`
+    );
     window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
   };
 
@@ -62,9 +67,8 @@ const Contact: React.FC = () => {
     <section
       id="contact"
       className="py-24 relative overflow-hidden"
-      // fundo de grid escuro: linhas finas sutis, espaçamento similar à referência
       style={{
-        backgroundColor: '#0b1115', // base escura
+        backgroundColor: '#0b1115',
         backgroundImage:
           'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
         backgroundSize: '56px 56px',
@@ -78,6 +82,7 @@ const Contact: React.FC = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
           transition={{ duration: 0.6 }}
         >
+          {/* Cabeçalho */}
           <div className="text-center mb-16">
             <motion.span
               initial={{ opacity: 0, y: 8 }}
@@ -113,18 +118,18 @@ const Contact: React.FC = () => {
             </motion.p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto items-start">
-            {/* Left: Form */}
+          {/* Grid principal */}
+          <div className="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto items-stretch">
+            {/* Coluna esquerda - Formulário */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
               transition={{ delay: 0.34, duration: 0.5 }}
-              className="min-h-[540px]"
+              className="flex"
             >
               <div
-                className="w-full h-full rounded-2xl p-6 md:p-8"
+                className="flex flex-col w-full rounded-2xl p-6 md:p-8"
                 style={{
-                  // muito sutil: quase transparente para manter o grid visível
                   background: 'rgba(255,255,255,0.02)',
                   border: '1px solid rgba(255,255,255,0.03)',
                   boxShadow: '0 14px 30px rgba(2,6,23,0.5)',
@@ -136,7 +141,8 @@ const Contact: React.FC = () => {
                   Conte-nos sobre seu projeto
                 </h3>
 
-                <form onSubmit={handleSubmit} className="flex flex-col h-full">
+                <form onSubmit={handleSubmit} className="flex flex-col flex-1">
+                  {/* Inputs */}
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
                       <label className="block text-sm font-medium text-white/70 mb-2">Nome *</label>
@@ -146,12 +152,10 @@ const Contact: React.FC = () => {
                         onChange={handleInputChange}
                         placeholder="Seu nome completo"
                         required
-                        // força transparência pra evitar estilos internos do Input
                         style={{ background: 'transparent', borderColor: 'rgba(255,255,255,0.06)' }}
                         className="text-white placeholder:text-white/50"
                       />
                     </div>
-
                     <div>
                       <label className="block text-sm font-medium text-white/70 mb-2">Email *</label>
                       <Input
@@ -167,16 +171,19 @@ const Contact: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Projeto */}
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-white/70 mb-2">Tipo de projeto</label>
                     <select
                       name="project"
                       value={formData.project}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-transparent border border-white/8 rounded-md text-white"
-                      style={{ background: 'transparent', borderColor: 'rgba(255,255,255,0.06)' }}
+                      className="w-full px-3 py-2 rounded-md text-white"
+                      style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.06)' }}
                     >
-                      <option value="" disabled>Selecione o tipo de projeto</option>
+                      <option value="" disabled>
+                        Selecione o tipo de projeto
+                      </option>
                       <option value="website">Website/Landing Page</option>
                       <option value="ecommerce">E-commerce</option>
                       <option value="webapp">Aplicação Web</option>
@@ -187,16 +194,19 @@ const Contact: React.FC = () => {
                     </select>
                   </div>
 
+                  {/* Orçamento */}
                   <div className="mb-4">
                     <label className="block text-sm font-medium text-white/70 mb-2">Orçamento estimado</label>
                     <select
                       name="budget"
                       value={formData.budget}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-transparent border border-white/8 rounded-md text-white"
-                      style={{ background: 'transparent', borderColor: 'rgba(255,255,255,0.06)' }}
+                      className="w-full px-3 py-2 rounded-md text-white"
+                      style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.06)' }}
                     >
-                      <option value="" disabled>Selecione a faixa de orçamento</option>
+                      <option value="" disabled>
+                        Selecione a faixa de orçamento
+                      </option>
                       <option value="5k-15k">R$ 5.000 - R$ 15.000</option>
                       <option value="15k-30k">R$ 15.000 - R$ 30.000</option>
                       <option value="30k-50k">R$ 30.000 - R$ 50.000</option>
@@ -205,6 +215,7 @@ const Contact: React.FC = () => {
                     </select>
                   </div>
 
+                  {/* Mensagem */}
                   <div className="mb-6 flex-1">
                     <label className="block text-sm font-medium text-white/70 mb-2">Detalhes do projeto</label>
                     <Textarea
@@ -218,14 +229,18 @@ const Contact: React.FC = () => {
                     />
                   </div>
 
-                  <div className="mt-auto">
+                  {/* Botão */}
+                  <div>
                     <Button
                       type="submit"
                       variant="cta"
                       size="lg"
-                      className="w-full rounded-full px-6 py-3 font-semibold shadow-lg"
+                      className="w-full rounded-full px-6 py-3 font-semibold shadow-lg mt-10"
                       disabled={isSubmitting}
-                      style={{ background: 'linear-gradient(90deg,#ff8a4b 0%, #ff5e3a 100%)', color: 'white' }}
+                      style={{
+                        background: 'linear-gradient(90deg,#ff8a4b 0%, #ff5e3a 100%)',
+                        color: 'white'
+                      }}
                     >
                       {isSubmitting ? (
                         <>
@@ -244,15 +259,16 @@ const Contact: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Right column */}
+            {/* Coluna direita */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
               transition={{ delay: 0.42, duration: 0.5 }}
-              className="space-y-6"
+              className="flex flex-col gap-6"
             >
+              {/* Card WhatsApp */}
               <div
-                className="rounded-2xl p-6"
+                className="rounded-2xl p-6 flex flex-col justify-between h-full"
                 style={{
                   background: 'rgba(255,255,255,0.02)',
                   border: '1px solid rgba(255,255,255,0.03)',
@@ -264,19 +280,15 @@ const Contact: React.FC = () => {
                   <MessageCircle className="w-6 h-6 text-accent-coral" />
                   Prefere conversar agora?
                 </h3>
-
                 <p className="text-white/80 mb-6 leading-relaxed">
                   Agende uma consultoria gratuita via WhatsApp. Resposta rápida e atendimento personalizado.
                 </p>
-
-                <Button onClick={handleWhatsAppClick} 
-                  variant="coral"
-                  size="xl"
-                  className="w-full mt-4">
+                <Button onClick={handleWhatsAppClick} variant="coral" size="xl" className="w-full mt-auto">
                   Chamar no WhatsApp
                 </Button>
               </div>
 
+              {/* Card contato */}
               <div
                 className="rounded-2xl p-6"
                 style={{
@@ -287,7 +299,6 @@ const Contact: React.FC = () => {
                 }}
               >
                 <h3 className="text-xl font-bold text-white mb-6">Outras formas de contato</h3>
-
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-primary-blue/10 rounded-xl flex items-center justify-center">
@@ -298,7 +309,6 @@ const Contact: React.FC = () => {
                       <p className="text-white/60 text-sm">Ligação ou WhatsApp</p>
                     </div>
                   </div>
-
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-accent-coral/10 rounded-xl flex items-center justify-center">
                       <Mail className="w-5 h-5 text-accent-coral" />
@@ -311,6 +321,7 @@ const Contact: React.FC = () => {
                 </div>
               </div>
 
+              {/* Card benefícios */}
               <div
                 className="rounded-2xl p-6"
                 style={{
@@ -321,7 +332,6 @@ const Contact: React.FC = () => {
                 }}
               >
                 <h3 className="text-xl font-bold text-white mb-6">Por que escolher a CarvaCode?</h3>
-
                 <div className="space-y-4">
                   {[
                     'Consultoria inicial gratuita',
