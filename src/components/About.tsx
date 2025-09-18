@@ -63,10 +63,10 @@ const About = () => {
               className="text-3xl md:text-4xl font-bold mb-6"
             >
               <span className="text-foreground">Transformamos </span>
-              <span className="text-primary-blue">ideias complexas</span>
+              <span className="bg-gradient-to-r from-primary-blue to-primary-blue-glow bg-clip-text text-transparent">ideias complexas</span>
               <br />
               <span className="text-foreground">em </span>
-              <span className="text-accent-coral">soluções digitais</span>
+              <span className="bg-gradient-to-r from-accent-coral to-warm-orange bg-clip-text text-transparent">soluções digitais</span>
             </motion.h2>
             
             <motion.p
@@ -120,7 +120,7 @@ const About = () => {
                 className="glass-card p-8 rounded-2xl hover:shadow-card transition-all duration-300 group"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-accent-coral rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-12 h-12 bg-gradient-to-r from-accent-coral to-warm-orange rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                   <div>

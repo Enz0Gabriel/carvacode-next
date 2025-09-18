@@ -79,13 +79,11 @@ const Footer: React.FC = () => {
       {/* Gradient/Blobs sutis por cima do grid (opcionais, não escondem o grid) */}
       <div
         aria-hidden
-        className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none z-15"
-        style={{ background: 'rgba(14,101,255,0.03)' }}
+        className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none z-15 bg-primary-blue/5"
       />
       <div
         aria-hidden
-        className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none z-15"
-        style={{ background: 'rgba(255,90,64,0.03)' }}
+        className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none z-15 bg-accent-coral/5"
       />
 
       {/* Conteúdo do Footer (acima das layers de background) */}
@@ -137,7 +135,7 @@ const Footer: React.FC = () => {
                   <li key={link.href}>
                     <button
                       onClick={() => handleLinkClick(link.href)}
-                      className="text-white/70 hover:text-white transition-colors duration-300 link-underline"
+                      className="text-white/70 hover:text-white transition-colors duration-300 link-underline-white cursor-pointer"
                     >
                       {link.label}
                     </button>

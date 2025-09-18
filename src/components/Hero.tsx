@@ -117,7 +117,7 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen py-20">
+        <div className="grid lg:grid-cols-2 gap-8 items-center min-h-screen py-20">
           {/* Left content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -131,7 +131,7 @@ const Hero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <span className="inline-block px-4 py-2 bg-primary-blue-10 border border-primary-blue-dark rounded-full text-primary-blue text-sm font-medium mb-6">
+              <span className="inline-block px-4 py-2 bg-primary-blue-10 border border-primary-blue rounded-full text-primary-blue text-sm font-medium mb-6">
                 🚀 Consultoria Especializada
               </span>
             </motion.div>
@@ -152,8 +152,6 @@ const Hero: React.FC = () => {
                 <span className="text-white">&nbsp;e&nbsp;</span>
                 <span className="text-accent-coral">apps</span>
               </div>
-
-              
             </motion.h1>
 
             {/* Subtitle */}
@@ -184,13 +182,13 @@ const Hero: React.FC = () => {
               <div className="flex items-center gap-2">
                 <div
                   className="w-2 h-2 rounded-full animate-pulse"
-                  style={{ backgroundColor: 'var(--color-warm-orange)' }}
+                  style={{ backgroundColor: 'var(--color-accent-coral)' }}
                 />
                 <span>Entregas ágeis</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-warm-orange rounded-full animate-pulse" />
                 <span>Integração mobile/web</span>
               </div>
             </motion.div>
@@ -234,60 +232,57 @@ const Hero: React.FC = () => {
             </motion.p>
           </motion.div>
 
-          {/* Right content: 3D demo area */}
+          {/* Right content: 3D demo area (responsiva) */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative h-[500px] lg:h-[600px]"
+            className="relative w-full flex items-center justify-center"
           >
-            {/* background blur */}
-            <div className="absolute inset-0 rounded-full blur-3xl bg-primary-blue-20" />
+            {/* Limitador de largura: vai diminuir conforme a tela */}
+            <div className="w-full max-w-md sm:max-w-lg lg:max-w-none">
+              {/* Box com aspect ratio (75% => 4:3). Ajuste paddingTop para outro ratio se quiser */}
+              <div ref={threeRef} className="relative w-full" style={{ paddingTop: '75%' }}>
+                {/* glow azul atrás da bola */}
+                <div className="absolute -inset-6 z-0 rounded-full blur-3xl bg-primary-blue-20" />
 
-            {/* Container referenciado para observer */}
-            <div
-              ref={threeRef}
-              className="relative z-10 w-full h-full flex items-center justify-center"
-            >
-              {webglSupported === false && (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-white/70 text-center px-4">
-                    <p className="mb-2 font-semibold">
-                      Visualização 3D indisponível
-                    </p>
-                    <p className="text-sm">
-                      Seu dispositivo ou navegador não suporta WebGL.
-                    </p>
-                  </div>
+                {/* conteúdo absoluto que preenche o box (em cima do glow) */}
+                <div className="absolute inset-0 z-10 rounded-xl overflow-hidden flex items-center justify-center">
+                  {webglSupported === false && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="text-white/70 text-center px-4">
+                        <p className="mb-2 font-semibold">Visualização 3D indisponível</p>
+                        <p className="text-sm">Seu dispositivo ou navegador não suporta WebGL.</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {!enable3D && (
+                    <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-black/20 to-transparent">
+                      <div className="max-w-xs text-center text-white/60">
+                        <div className="h-48 w-48 mx-auto mb-4 rounded-full bg-primary-blue-10 animate-pulse" />
+                        <p className="mb-3 font-medium">Animação interativa</p>
+
+                        {webglSupported && (
+                          <button
+                            onClick={() => setEnable3D(true)}
+                            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-white/8 text-white text-sm"
+                          >
+                            Ativar visualização 3D
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {enable3D && webglSupported && (
+                    /* ThreeDemo deve preencher o box e escalar automaticamente */
+                    <div className="w-full h-full">
+                      <ThreeDemo className="w-full h-full" />
+                    </div>
+                  )}
                 </div>
-              )}
-
-              
-
-              {!enable3D && (
-                <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-black/20 to-transparent">
-                  <div className="max-w-xs text-center text-white/60">
-                    <div className="h-48 w-48 mx-auto mb-4 rounded-full bg-primary-blue-10 animate-pulse" />
-                    <p className="mb-3 font-medium">Animação interativa</p>
-
-                    {webglSupported && (
-                      <button
-                        onClick={() => setEnable3D(true)}
-                        className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-white/8 text-white text-sm"
-                      >
-                        Ativar visualização 3D
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {enable3D && webglSupported && (
-                <ThreeDemo className="relative z-10 w-full h-full" />
-              )}
-
-              
-
+              </div>
             </div>
           </motion.div>
         </div>
