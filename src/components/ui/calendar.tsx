@@ -42,8 +42,11 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+        // usa o componente Chevron suportado pela API atual do react-day-picker
+        Chevron: ({ orientation, className, ...rest }: { orientation?: "left" | "right" | "up" | "down"; className?: string } & Record<string, any>) => {
+          const Icon = orientation === "left" ? ChevronLeft : ChevronRight;
+          return <Icon {...rest} className={cn("h-4 w-4", className)} />;
+        },
       }}
       {...props}
     />
