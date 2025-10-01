@@ -79,7 +79,7 @@ const Header = () => {
               size="lg"
               onClick={() =>
                 window.open(
-                  'https://wa.me/5511999999999?text=Olá! Gostaria de agendar uma consultoria gratuita.',
+                  'https://wa.me/5511951614457?text=Olá! Gostaria de agendar uma consultoria gratuita.',
                   '_blank'
                 )
               }
@@ -141,7 +141,7 @@ const Header = () => {
               size="xl"
               onClick={() => {
                 window.open(
-                  'https://wa.me/5511999999999?text=Olá! Gostaria de agendar uma consultoria gratuita.',
+                  'https://wa.me/5511951614457?text=Olá! Gostaria de agendar uma consultoria gratuita.',
                   '_blank'
                 );
                 setIsMobileMenuOpen(false);

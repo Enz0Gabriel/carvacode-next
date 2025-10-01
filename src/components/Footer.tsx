@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
 
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent('Olá! Gostaria de agendar uma consultoria gratuita.');
-    window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+    window.open(`https://wa.me/5511951614457?text=${message}`, '_blank');
   };
 
   return (
@@ -155,7 +155,7 @@ const Footer: React.FC = () => {
               <div className="space-y-3">
                 <p className="text-white/70">
                   <span className="text-white font-medium">WhatsApp:</span><br />
-                  (11) 99999-9999
+                  (11) 95161-4457
                 </p>
                 <p className="text-white/70">
                   <span className="text-white font-medium">Email:</span><br />

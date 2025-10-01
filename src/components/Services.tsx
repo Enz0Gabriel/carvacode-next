@@ -167,7 +167,7 @@ const Services = () => {
                 size="xl"
                 onClick={() => {
                   const message = encodeURIComponent('Olá! Gostaria de conversar sobre meu projeto digital.');
-                  window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+                  window.open(`https://wa.me/5511951614457?text=${message}`, '_blank');
                 }}
                 className="group"
               >

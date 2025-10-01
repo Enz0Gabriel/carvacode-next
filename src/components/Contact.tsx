@@ -60,7 +60,7 @@ const Contact: React.FC = () => {
         formData.project || '[Descrição do projeto]'
       }. Orçamento estimado: ${formData.budget || '[Valor aproximado]'}`
     );
-    window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+    window.open(`https://wa.me/5511951614457?text=${message}`, '_blank');
   };
 
   return (
@@ -305,7 +305,7 @@ const Contact: React.FC = () => {
                       <Phone className="w-5 h-5 text-primary-blue" />
                     </div>
                     <div>
-                      <p className="text-white font-medium">(11) 99999-9999</p>
+                      <p className="text-white font-medium">(11) 95161-4457</p>
                       <p className="text-white/60 text-sm">Ligação ou WhatsApp</p>
                     </div>
                   </div>
