@@ -1,346 +1,188 @@
 @import "tailwindcss";
 
-/* -------------------------
-   0) Variáveis globais + Aliases
-   ------------------------- */
-:root {
-  color-scheme: light dark;
-
-  /* Brand Colors */
-  --color-primary-blue: #00a8e8;        /* hsl(196 81% 51%) */
-  --color-primary-blue-glow: #33baf0;   /* hsl(196 81% 61%) */
-  --color-primary-blue-dark: #0084b3;
-  --color-accent-coral: #ff694d;        /* hsl(13 100% 64%) */
-  --color-warm-orange: #ff9d40;         /* hsl(32 100% 62%) */
-
-  /* Backgrounds */
-  --color-bg-deep-start: #0c1216;       /* hsl(210 31% 6%) */
-  --color-bg-deep-end: #121a22;         /* hsl(213 38% 9%) */
-
-  /* Aliases (compatibilidade) */
-  --primary-blue: var(--color-primary-blue);
-  --primary-blue-glow: var(--color-primary-blue-glow);
-  --primary: var(--color-primary-blue);
-  --accent-coral: var(--color-accent-coral);
-  --warm-orange: var(--color-warm-orange);
-  --accent: var(--color-accent-coral);
-  --bg-deep-start: var(--color-bg-deep-start);
-  --bg-deep-end: var(--color-bg-deep-end);
-
-  /* Fallbacks antigos */
-  --primary-500: var(--color-primary-blue);
-  --accent-500: var(--color-accent-coral);
-
-  /* Gradients */
-  --gradient-primary: linear-gradient(
-    135deg,
-    var(--color-primary-blue),
-    var(--color-primary-blue-glow)
-  );
-  --gradient-hero: linear-gradient(135deg, var(--color-bg-deep-start), var(--color-bg-deep-end));
-  --gradient-accent: linear-gradient(135deg, var(--color-accent-coral), var(--color-warm-orange));
-  --gradient-glass: linear-gradient(145deg, #ffffff0f, #ffffff08);
-
-  /* Shadows */
-  --shadow-glow-blue: 0 0 40px #00a8e847;
-  --shadow-glow-coral: 0 10px 40px #ff694d24;
-
-  --color-white: #ffffff;
-}
-
-/* -------------------------
-   1) Tokens de Tema (Tailwind v4)
-   ------------------------- */
+/* -------------------------------------------------------------------------
+   Tokens da marca
+   Contrastes (WCAG) conferidos para os pares usados:
+   - texto #0c1216 sobre coral #ff694d ......... 6,6:1 (botão principal)
+   - azul #00a8e8 sobre fundo escuro #0c1216 ... 7,0:1
+   - azul-tinta #0072a3 sobre branco ........... 5,3:1 (texto azul em fundo claro)
+   - texto secundário #526173 sobre #f5f8fc .... 5,9:1
+   - borda de campo #7d8b9d sobre branco ....... 3,5:1
+   Branco sobre coral (2,85:1) e branco sobre azul (2,7:1) não são usados em texto.
+   ------------------------------------------------------------------------- */
 @theme {
-  --color-primary-blue: var(--color-primary-blue);
-  --color-primary-blue-glow: var(--color-primary-blue-glow);
-  --color-accent-coral: var(--color-accent-coral);
-  --color-warm-orange: var(--color-warm-orange);
+  --color-brand-blue: #00a8e8;
+  --color-brand-blue-light: #5cc8f2;
+  --color-brand-blue-ink: #0072a3;
+  --color-brand-coral: #ff694d;
+  --color-brand-coral-hover: #ff8266;
 
-  --color-bg-deep-start: var(--color-bg-deep-start);
-  --color-bg-deep-end: var(--color-bg-deep-end);
+  --color-ink-950: #0c1216;
+  --color-ink-900: #121a22;
+  --color-ink-800: #1b2530;
+  --color-ink-700: #2a3644;
 
-  --color-background: #ffffff;
-  --color-foreground: #121a22;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f8fc;
+  --color-fg: #121a22;
+  --color-fg-muted: #526173;
+  --color-line: #e1e7ef;
+  --color-line-strong: #7d8b9d;
 
-  --color-card: #ffffff;
-  --color-card-foreground: #121a22;
+  --color-on-dark: #f4f8fb;
+  --color-on-dark-muted: #a9b6c6;
 
-  --color-muted: #f1f5fb;
-  --color-muted-foreground: #5b6b7f;
-
-  --color-border: #e4eaf5;  /* hsl(214 32% 91%) */
-  --color-input: #e4eaf5;
-  --color-ring: var(--color-primary-blue);
-
-  --radius: 1rem;
+  --color-danger: #b42318;
+  --color-success: #067647;
 }
 
-/* -------------------------
-   2) Dark Theme Overrides
-   ------------------------- */
-.dark {
-  --color-background: #0c1216;
-  --color-foreground: #fafafa;
-
-  --color-card: #121a22;
-  --color-card-foreground: #fafafa;
-
-  --color-muted: #121a22;
-  --color-muted-foreground: #9aa8ba;
-
-  --color-border: #242c35;  /* hsl(213 25% 15%) */
-  --color-input: #242c35;
-  --color-ring: var(--color-primary-blue);
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-brand: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* -------------------------
-   3) Base Reset
-   ------------------------- */
+/* -------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------- */
 @layer base {
-  * {
-    border-color: var(--color-border);
-    box-sizing: border-box;
-  }
-
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    max-width: 100%;
-    overflow-x: hidden;
-    width: 100%;
+  :root {
+    color-scheme: light;
+    --focus-ring: var(--color-brand-blue-ink);
+    --header-height: 4rem;
   }
 
   html {
-    scroll-behavior: smooth;
-    max-width: 100%;
-    overflow-x: hidden;
-    width: 100%;
+    /* Evita que o cabeçalho fixo cubra o título ao navegar por âncoras. */
+    scroll-padding-top: calc(var(--header-height) + 1rem);
+    -webkit-text-size-adjust: 100%;
   }
 
-  /* Títulos usam a fonte display (Sora) */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-sora), var(--font-inter), system-ui, sans-serif;
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
     letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  /* Seções escuras: foco claro e controles nativos no modo escuro. */
+  .surface-dark {
+    --focus-ring: var(--color-brand-blue-light);
+    color-scheme: dark;
+  }
+
+  .surface-light {
+    --focus-ring: var(--color-brand-blue-ink);
+    color-scheme: light;
   }
 }
 
-/* -------------------------
-   4) Utilitários custom
-   ------------------------- */
-@layer utilities {
-
-  .hero-gradient {
-    background: var(--gradient-hero);
-  }
-
-  .hero-glow-primary {
-    animation: hero-glow-primary 18s ease-in-out infinite;
-    will-change: opacity, transform;
-  }
-
-  .hero-glow-accent {
-    animation: hero-glow-accent 22s ease-in-out infinite;
-    will-change: opacity, transform;
-  }
-
-  .bg-grid-pattern {
-    background-image:
-      linear-gradient(0deg, #ffffff05 1px, transparent 1px),
-      linear-gradient(90deg, #ffffff05 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.18;
-  }
-
-.glass-card {
-  background-color: var(--color-card);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.04);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-}
-
-.glass-card:hover {
-  border-color: color-mix(in srgb, var(--color-primary-blue) 35%, var(--color-border));
-  box-shadow:
-    0 20px 50px -14px rgba(2, 6, 23, 0.16),
-    0 8px 20px -10px rgba(0, 168, 232, 0.14);
-  transform: translateY(-6px);
-}
-
-
-  .rounded-3xl { border-radius: 28px; }
-  .rounded-4xl { border-radius: 36px; }
-
-  .glow-blue { box-shadow: var(--shadow-glow-blue); }
-  .glow-coral { box-shadow: var(--shadow-glow-coral); }
-
-  .bg-primary-blue-10 { background-color: color-mix(in srgb, var(--color-primary-blue) 8%, transparent); }
-  .bg-primary-blue-20 { background-color: color-mix(in srgb, var(--color-primary-blue) 18%, transparent); }
-  .bg-accent-coral-10 { background-color: color-mix(in srgb, var(--color-accent-coral) 8%, transparent); }
-  .bg-accent-coral-20 { background-color: color-mix(in srgb, var(--color-accent-coral) 18%, transparent); }
-
-  .text-primary-blue { color: var(--color-primary-blue); }
-  .text-accent-coral { color: var(--color-accent-coral); }
-
-  .brand-wordmark {
-    color: #f4fbff;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.08em;
-    font-family: var(--font-brand), var(--font-inter), system-ui, sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    line-height: 1;
-    text-rendering: geometricPrecision;
-  }
-
-  .brand-wordmark-carva {
-    color: #f4fbff;
-    font-weight: 600;
-  }
-
-  .brand-wordmark-code {
-    color: var(--color-primary-blue);
-    font-weight: 800;
-  }
-
-  /* Texto com gradiente (títulos de destaque) */
-  .text-gradient-primary {
-    background: linear-gradient(90deg, var(--color-primary-blue), var(--color-primary-blue-glow));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-  .text-gradient-accent {
-    background: linear-gradient(90deg, var(--color-accent-coral), var(--color-warm-orange));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* Sombra elegante para cards em hover */
-  .shadow-elegant {
-    box-shadow:
-      0 20px 50px -12px rgba(2, 6, 23, 0.18),
-      0 8px 20px -8px rgba(0, 168, 232, 0.12);
-  }
-
-  .btn-cta {
-    background: linear-gradient(90deg, var(--color-warm-orange), var(--color-accent-coral));
-    color: white;
-    border-radius: 9999px;
-    padding: 0.75rem 1.25rem;
-    box-shadow: 0 8px 30px #ff8c501f;
-    border: 1px solid #ffffff0f;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    font-weight: 600;
-    transition: transform .18s ease, box-shadow .18s ease;
-  }
-  .btn-cta:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 40px #ff8c5024;
-  }
-
-  .btn-coral {
-    background: linear-gradient(90deg, var(--color-accent-coral), var(--color-warm-orange));
-    color: white;
-    border-radius: 12px;
-    padding: 0.7rem 1rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    border: none;
-    transition: transform .14s ease;
-  }
-  .btn-coral:hover { transform: translateY(-2px); }
-
-  .card-inner-highlight {
-    position: relative;
-    overflow: hidden;
-  }
-  .card-inner-highlight::after {
-    content: "";
-    position: absolute;
-    right: -30%;
-    top: -10%;
-    width: 60%;
-    height: 60%;
-    background: radial-gradient(closest-side, #ff78500f, transparent 40%);
-    pointer-events: none;
-    filter: blur(40px);
-  }
-
-  /* =========================
-     LINKS COM UNDERLINE AZUL
-     ========================= */
-  .link-underline,
-  .link-underline-white {
-    position: relative;
-    display: inline-block;
-  }
-
-  /* deixar o underline expandir sem mexer na largura real */
-  .link-underline::after,
-  .link-underline-white::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;              /* cobre toda a largura do elemento pai */
-    height: 2px;
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.25s ease;
-    background-color: var(--color-primary-blue);
-  }
-
-  /* branco */
-  .link-underline-white::after {
-    background-color: var(--color-white);
-  }
-
-  /* animar */
-  .link-underline:hover::after,
-  .link-underline-white:hover::after {
-    transform: scaleX(1);
-  }
-
-}
-
-@keyframes hero-glow-primary {
-  0%, 100% {
-    opacity: 0.9;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: translate3d(18px, -14px, 0) scale(1.04);
-  }
-}
-
-@keyframes hero-glow-accent {
-  0%, 100% {
-    opacity: 0.8;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    opacity: 0.95;
-    transform: translate3d(-16px, 12px, 0) scale(1.05);
-  }
-}
-
+/* Movimento reduzido: desliga transições, animações e rolagem suave. */
 @media (prefers-reduced-motion: reduce) {
-  .hero-glow-primary,
-  .hero-glow-accent {
-    animation: none;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
+}
+
+/* -------------------------------------------------------------------------
+   Utilitários do projeto
+   ------------------------------------------------------------------------- */
+@utility container-site {
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility section-y {
+  padding-block: 3.5rem;
+
+  @media (width >= 40rem) {
+    padding-block: 5rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-block: 6rem;
+  }
+}
+
+@utility eyebrow {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand-blue-ink);
+}
+
+@utility eyebrow-dark {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brand-blue);
+}
+
+@utility hero-backdrop {
+  background-color: var(--color-ink-950);
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, rgb(0 168 232 / 0.14), transparent 70%),
+    radial-gradient(40rem 24rem at -10% 110%, rgb(255 105 77 / 0.08), transparent 70%);
+}
+
+/* Marca textual "CarvaCode" ao lado do símbolo. */
+.brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: #f4fbff;
+}
+
+.brand-wordmark-code {
+  color: var(--color-brand-blue);
+  font-weight: 800;
 }

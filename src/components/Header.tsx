@@ -1,161 +1,199 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import logo from '../assets/logo.svg';
-import Image from 'next/image';
 
-const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+import BrandLogo from './BrandLogo';
+import { WhatsAppIcon } from './icons';
+import { buttonVariants } from './ui/button';
+import { siteConfig, whatsappUrl } from '@/config/site';
+import { cn } from '@/lib/utils';
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+// Links absolutos ("/#...") funcionam tanto na página inicial quanto em outras páginas.
+const NAV_ITEMS = [
+  { href: '/#services', label: 'Soluções' },
+  { href: '/#como-trabalhamos', label: 'Como trabalhamos' },
+  { href: '/#about', label: 'Equipe' },
+  { href: '/#perguntas', label: 'Dúvidas' },
+  { href: '/#contact', label: 'Contato' },
+];
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+const MENU_ID = 'menu-principal-movel';
+
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const closeMenu = useCallback((returnFocus: boolean) => {
+    setIsMenuOpen(false);
+    if (returnFocus) toggleRef.current?.focus();
   }, []);
 
-  const navItems = [
-    { href: '#about', label: 'Sobre' },
-    { href: '#services', label: 'Serviços' },
-    { href: '#tecnologias', label: 'Tecnologias' },
-    { href: '#contact', label: 'Contato' },
-  ];
+  useEffect(() => {
+    if (!isMenuOpen) return;
 
-  const handleNavClick = (href: string) => {
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
-  };
+    const root = document.documentElement;
+    const previousOverflow = root.style.overflow;
+    root.style.overflow = 'hidden';
+
+    // Torna o restante da página inerte: o foco fica restrito ao cabeçalho e ao menu.
+    const madeInert: HTMLElement[] = [];
+    for (const element of Array.from(document.body.children)) {
+      if (
+        element instanceof HTMLElement &&
+        !element.contains(headerRef.current) &&
+        !element.inert
+      ) {
+        element.inert = true;
+        madeInert.push(element);
+      }
+    }
+
+    panelRef.current?.querySelector<HTMLElement>('a')?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMenu(true);
+        return;
+      }
+      // Mantém o Tab circulando entre o cabeçalho e o menu enquanto ele está aberto.
+      if (event.key !== 'Tab' || !headerRef.current) return;
+      const focusable = Array.from(
+        headerRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+      ).filter((element) => element.getClientRects().length > 0);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const current = document.activeElement;
+      if (event.shiftKey && (current === first || !headerRef.current.contains(current))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (current === last || !headerRef.current.contains(current))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    const desktop = window.matchMedia('(min-width: 64rem)');
+    const onBreakpoint = () => {
+      if (desktop.matches) closeMenu(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    desktop.addEventListener('change', onBreakpoint);
+
+    return () => {
+      root.style.overflow = previousOverflow;
+      madeInert.forEach((element) => {
+        element.inert = false;
+      });
+      document.removeEventListener('keydown', onKeyDown);
+      desktop.removeEventListener('change', onBreakpoint);
+    };
+  }, [isMenuOpen, closeMenu]);
 
   return (
-    <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-bg-deep-start/95 backdrop-blur-lg border-b border-white/10'
-            : 'bg-transparent'
-        }`}
-      >
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-3 cursor-pointer"
-          >
-            <Image src={logo} alt="" aria-hidden="true" className="h-8 w-auto" />
-            <span className="brand-wordmark text-xl" aria-label="CarvaCode">
-              <span className="brand-wordmark-carva">Carva</span>
-              <span className="brand-wordmark-code">Code</span>
-            </span>
-          </motion.div>
+    <header
+      ref={headerRef}
+      className="surface-dark fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink-950/95 text-on-dark backdrop-blur supports-[backdrop-filter]:bg-ink-950/85"
+    >
+      <div className="container-site flex h-16 items-center justify-between gap-4">
+        <a
+          href="/#inicio"
+          aria-label={`${siteConfig.name}, ir para o início`}
+          className="-m-1 rounded-lg p-1"
+          onClick={() => isMenuOpen && closeMenu(false)}
+        >
+          <BrandLogo />
+        </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className={`text-sm font-medium link-underline cursor-pointer transition-colors duration-300 
-                  ${isScrolled ? 'text-white hover:text-primary-blue' : 'text-white/90 hover:text-primary-blue'}`}
-              >
-                {item.label}
-              </button>
+        <nav aria-label="Principal" className="hidden lg:block">
+          <ul className="flex items-center gap-7">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  className="rounded text-[0.9375rem] font-medium text-on-dark-muted transition-colors hover:text-white"
+                >
+                  {item.label}
+                </a>
+              </li>
             ))}
-          </nav>
+          </ul>
+        </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Button
-              className="cursor-pointer"
-              variant="hero"
-              size="lg"
-              onClick={() =>
-                window.open(
-                  'https://wa.me/5511959766136?text=Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.',
-                  '_blank'
-                )
-              }
-            >
-              Falar com a equipe
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
-            aria-expanded={isMobileMenuOpen}
-            className="md:hidden p-2 text-white hover:text-primary-blue transition-colors cursor-pointer"
+        <div className="flex items-center gap-2">
+          <a
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ size: 'sm' }), 'hidden sm:inline-flex')}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <WhatsAppIcon />
+            Falar com a equipe
+            <span className="sr-only"> pelo WhatsApp (abre em nova aba)</span>
+          </a>
+
+          {/* Atalho compacto para o WhatsApp em telas pequenas. */}
+          <a
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Conversar pelo WhatsApp (abre em nova aba)"
+            className="inline-flex size-11 items-center justify-center rounded-xl text-on-dark hover:bg-white/10 sm:hidden"
+          >
+            <WhatsAppIcon className="size-5" />
+          </a>
+
+          <button
+            ref={toggleRef}
+            type="button"
+            className="inline-flex size-11 items-center justify-center rounded-xl text-on-dark hover:bg-white/10 lg:hidden"
+            aria-expanded={isMenuOpen}
+            aria-controls={MENU_ID}
+            onClick={() => setIsMenuOpen((open) => !open)}
+          >
+            {isMenuOpen ? <X aria-hidden="true" className="size-6" /> : <Menu aria-hidden="true" className="size-6" />}
+            <span className="sr-only">{isMenuOpen ? 'Fechar menu' : 'Abrir menu'}</span>
           </button>
         </div>
-      </motion.header>
+      </div>
 
-      {/* Mobile Menu */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{
-          opacity: isMobileMenuOpen ? 1 : 0,
-          y: isMobileMenuOpen ? 0 : -20,
-        }}
-        transition={{ duration: 0.3 }}
-        className={`fixed inset-0 z-40 bg-bg-deep-start/98 backdrop-blur-lg ${
-          isMobileMenuOpen ? 'block' : 'hidden'
-        } md:hidden`}
+      <div
+        ref={panelRef}
+        id={MENU_ID}
+        hidden={!isMenuOpen}
+        className="h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-white/10 bg-ink-950 lg:hidden"
       >
-        <div className="flex flex-col items-center justify-center h-full space-y-8 px-4">
-          {navItems.map((item, index) => (
-            <motion.button
-              key={item.href}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{
-                opacity: isMobileMenuOpen ? 1 : 0,
-                y: isMobileMenuOpen ? 0 : 20,
-              }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => handleNavClick(item.href)}
-              className="text-2xl font-semibold text-white hover:text-primary-blue cursor-pointer transition-colors duration-300"
-            >
-              {item.label}
-            </motion.button>
-          ))}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: isMobileMenuOpen ? 1 : 0,
-              y: isMobileMenuOpen ? 0 : 20,
-            }}
-            transition={{ delay: 0.6 }}
-            className="pt-8"
+        <nav aria-label="Principal (celular)" className="container-site py-6">
+          <ul className="divide-y divide-white/10">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  className="flex min-h-14 items-center text-lg font-semibold text-on-dark hover:text-brand-blue-light"
+                  onClick={() => closeMenu(false)}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ size: 'lg' }), 'mt-8 w-full')}
+            onClick={() => closeMenu(false)}
           >
-            <Button
-              className="cursor-pointer"
-              variant="cta"
-              size="xl"
-              onClick={() => {
-                window.open(
-                  'https://wa.me/5511959766136?text=Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.',
-                  '_blank'
-                );
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              Falar com a equipe
-            </Button>
-          </motion.div>
-        </div>
-      </motion.div>
-    </>
+            <WhatsAppIcon />
+            Conversar pelo WhatsApp
+            <span className="sr-only"> (abre em nova aba)</span>
+          </a>
+          <p className="mt-4 text-center text-sm text-on-dark-muted">{siteConfig.contact.businessHours}</p>
+        </nav>
+      </div>
+    </header>
   );
-};
-
-export default Header;
+}

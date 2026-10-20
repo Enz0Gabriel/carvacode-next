@@ -1,60 +1,62 @@
 import './globals.css';
 
-import type { Metadata, Viewport } from "next";
-import { Inter, Manrope, Sora } from "next/font/google";
+import type { Metadata, Viewport } from 'next';
+import { Inter, Manrope, Sora } from 'next/font/google';
+
+import { siteConfig } from '@/config/site';
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
+// Títulos: apenas os pesos usados.
 const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
+  subsets: ['latin'],
+  variable: '--font-sora',
+  display: 'swap',
+  weight: ['600', '700'],
 });
 
+// Marca textual "CarvaCode".
 const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-brand",
-  display: "swap",
-  weight: ["600", "700", "800"],
+  subsets: ['latin'],
+  variable: '--font-manrope',
+  display: 'swap',
+  weight: ['600', '800'],
 });
-
-const siteUrl = "https://www.carvacodeweb.com";
-const title = "CarvaCode - Desenvolvimento de Sites, Sistemas e Apps";
-const description =
-  "Desenvolvemos sites, sistemas web e aplicativos sob medida, com interface moderna, backend bem estruturado e base preparada para manutenção e evolução.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title,
-  description,
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
   alternates: {
-    canonical: siteUrl,
+    canonical: '/',
   },
   openGraph: {
-    title,
-    description,
-    url: siteUrl,
-    siteName: "CarvaCode",
-    locale: "pt_BR",
-    type: "website",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: '/',
+    siteName: siteConfig.name,
+    locale: 'pt_BR',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title,
-    description,
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
   },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
-  colorScheme: "light dark",
-  themeColor: "#0c1216",
+  colorScheme: 'light',
+  themeColor: '#0c1216',
 };
 
 export default function RootLayout({
@@ -64,7 +66,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${sora.variable} ${manrope.variable}`}>
-      <body>{children}</body>
+      <body>
+        <a
+          href="#conteudo"
+          className="sr-only rounded-lg bg-white px-4 py-3 font-semibold text-ink-950 shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[60]"
+        >
+          Pular para o conteúdo
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
