@@ -1,37 +1,48 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
 
-const BackToTop: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
+import { cn } from '@/lib/utils';
+
+const FORM_FIELDS = 'input, textarea, select';
+
+export default function BackToTop() {
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(window.scrollY > 520);
-    };
+    const onScroll = () => setScrolledDown(window.scrollY > 640);
+    // Enquanto um campo está em edição (teclado virtual aberto), o botão sai do caminho.
+    const onFocusIn = (event: FocusEvent) =>
+      setEditing(event.target instanceof Element && event.target.matches(FORM_FIELDS));
+    const onFocusOut = () => setEditing(false);
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('focusin', onFocusIn);
+    document.addEventListener('focusout', onFocusOut);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('focusin', onFocusIn);
+      document.removeEventListener('focusout', onFocusOut);
+    };
   }, []);
 
-  const handleClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const visible = scrolledDown && !editing;
 
   return (
-    <button
-      type="button"
-      aria-label="Voltar ao topo"
-      onClick={handleClick}
-      className={`fixed bottom-5 right-5 z-50 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-bg-deep-start/75 text-white/60 shadow-lg backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-primary-blue/50 hover:text-primary-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue/60 ${
-        isVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
-      }`}
+    <a
+      href="#inicio"
+      aria-label="Voltar ao início da página"
+      // `invisible` também retira o link da ordem de tabulação quando ele não aparece.
+      className={cn(
+        'surface-dark fixed right-4 z-40 flex size-11 items-center justify-center rounded-full border border-white/15 bg-ink-950/90 text-on-dark shadow-lg transition-opacity duration-200 hover:border-brand-blue hover:text-brand-blue-light',
+        'bottom-[calc(1rem+env(safe-area-inset-bottom))]',
+        visible ? 'visible opacity-100' : 'invisible opacity-0',
+      )}
     >
-      <ArrowUp className="h-4 w-4" />
-    </button>
+      <ArrowUp aria-hidden="true" className="size-5" />
+    </a>
   );
-};
-
-export default BackToTop;
+}

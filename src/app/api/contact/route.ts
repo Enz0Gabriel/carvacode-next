@@ -1,62 +1,34 @@
-import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const CONTACT_EMAIL = 'carvacodebr@gmail.com';
+import { createContactHandler, type SendEmail } from '@/lib/contact-handler';
+
+// Destinatário das mensagens do formulário.
+// Decisão atual: continuar entregando na caixa Gmail já usada pela equipe, porque é a
+// caixa com recebimento comprovado. O endereço público do site é contato@carvacodeweb.com.
+// Para passar a receber direto no endereço institucional, defina CONTACT_TO_EMAIL na
+// hospedagem depois de confirmar que essa caixa recebe e-mails (registros MX).
+const DEFAULT_TO = 'carvacodebr@gmail.com';
+// O remetente precisa estar em um domínio verificado no Resend.
+const DEFAULT_FROM = 'CarvaCode Site <contato@carvacodeweb.com>';
+
+export const runtime = 'nodejs';
+
+function createSender(): SendEmail | null {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+  const resend = new Resend(apiKey);
+  return async (email, signal) => {
+    const { error } = await resend.emails.send(email, { signal });
+    return { error: error ? { name: error.name, statusCode: error.statusCode } : null };
+  };
+}
+
+const handleContact = createContactHandler({
+  send: createSender(),
+  to: process.env.CONTACT_TO_EMAIL || DEFAULT_TO,
+  from: process.env.CONTACT_FROM_EMAIL || DEFAULT_FROM,
+});
 
 export async function POST(request: Request) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error('RESEND_API_KEY não configurada');
-    return NextResponse.json(
-      { error: 'Serviço de email não configurado.' },
-      { status: 500 }
-    );
-  }
-
-  const body = await request.json();
-  const { name, email, phone, project, budget, message } = body ?? {};
-
-  if (!name || !email || !phone || !message) {
-    return NextResponse.json(
-      { error: 'Nome, email, telefone e detalhes do projeto são obrigatórios.' },
-      { status: 400 }
-    );
-  }
-
-  const resend = new Resend(apiKey);
-
-  try {
-    const { error } = await resend.emails.send({
-      from: 'CarvaCode Site <contato@carvacodeweb.com>',
-      to: CONTACT_EMAIL,
-      replyTo: email,
-      subject: `Novo contato do site: ${name}`,
-      text: [
-        `Nome: ${name}`,
-        `Email: ${email}`,
-        `Telefone/WhatsApp: ${phone || 'não informado'}`,
-        `Tipo de projeto: ${project || 'não informado'}`,
-        `Orçamento: ${budget || 'não informado'}`,
-        '',
-        'Mensagem:',
-        message || '(sem detalhes adicionais)',
-      ].join('\n'),
-    });
-
-    if (error) {
-      console.error('Erro ao enviar email via Resend:', error);
-      return NextResponse.json(
-        { error: 'Não foi possível enviar sua mensagem.' },
-        { status: 502 }
-      );
-    }
-
-    return NextResponse.json({ ok: true });
-  } catch (err) {
-    console.error('Erro inesperado ao enviar email:', err);
-    return NextResponse.json(
-      { error: 'Não foi possível enviar sua mensagem.' },
-      { status: 500 }
-    );
-  }
+  return handleContact(request);
 }
