@@ -23,8 +23,7 @@ const Header = () => {
   const navItems = [
     { href: '#about', label: 'Sobre' },
     { href: '#services', label: 'Serviços' },
-    { href: '#portfolio', label: 'Portfólio' },
-    { href: '#testimonials', label: 'Depoimentos' },
+    { href: '#tecnologias', label: 'Tecnologias' },
     { href: '#contact', label: 'Contato' },
   ];
 
@@ -51,9 +50,10 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-3 cursor-pointer"
           >
-            <Image src={logo} alt="CarvaCode" className="h-8 w-auto" />
-            <span className="text-xl font-bold text-primary-blue">
-              CarvaCode
+            <Image src={logo} alt="" aria-hidden="true" className="h-8 w-auto" />
+            <span className="brand-wordmark text-xl" aria-label="CarvaCode">
+              <span className="brand-wordmark-carva">Carva</span>
+              <span className="brand-wordmark-code">Code</span>
             </span>
           </motion.div>
 
@@ -79,18 +79,20 @@ const Header = () => {
               size="lg"
               onClick={() =>
                 window.open(
-                  'https://wa.me/5511951614457?text=Olá! Gostaria de agendar uma consultoria gratuita.',
+                  'https://wa.me/5511959766136?text=Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.',
                   '_blank'
                 )
               }
             >
-              Agendar Consultoria
+              Falar com a equipe
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={isMobileMenuOpen}
             className="md:hidden p-2 text-white hover:text-primary-blue transition-colors cursor-pointer"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -141,13 +143,13 @@ const Header = () => {
               size="xl"
               onClick={() => {
                 window.open(
-                  'https://wa.me/5511951614457?text=Olá! Gostaria de agendar uma consultoria gratuita.',
+                  'https://wa.me/5511959766136?text=Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.',
                   '_blank'
                 );
                 setIsMobileMenuOpen(false);
               }}
             >
-              Agendar Consultoria Grátis
+              Falar com a equipe
             </Button>
           </motion.div>
         </div>

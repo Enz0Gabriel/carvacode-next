@@ -1,103 +1,21 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import dynamic from 'next/dynamic';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowDown, Play } from 'lucide-react';
 
-// Carrega o wrapper (ThreeDemo.tsx) dinamicamente — SSR desativado
-const ThreeDemo = dynamic(() => import('./ThreeDemo'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      {/* placeholder com token azul */}
-      <div className="animate-pulse w-40 h-40 rounded-full bg-primary-blue-10" />
-    </div>
-  ),
-});
-
-// Hook simples para detectar WebGL
-function isWebGLAvailable(): boolean {
-  try {
-    if (typeof window === 'undefined') return false;
-    const canvas = document.createElement('canvas');
-    return !!(
-      (window as any).WebGLRenderingContext &&
-      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-    );
-  } catch {
-    return false;
-  }
-}
-
-// Hook para IntersectionObserver (lazy load)
-function useOnScreen<T extends Element>(options?: IntersectionObserverInit) {
-  const ref = useRef<T | null>(null);
-  const [isIntersecting, setIntersecting] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setIntersecting(true);
-        observer.disconnect();
-      }
-    }, options);
-
-    observer.observe(el);
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options]);
-
-  return { ref, isIntersecting };
-}
-
 const Hero: React.FC = () => {
-  const [showTooltip, setShowTooltip] = useState(true);
-  const [enable3D, setEnable3D] = useState(false);
-  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
-
-  // detecta prefer-reduced-motion
-  const prefersReducedMotion =
-    typeof window !== 'undefined' && window.matchMedia
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
-
-  // Intersection hook para o container 3D
-  const { ref: threeRef, isIntersecting } = useOnScreen<HTMLDivElement>({
-    root: null,
-    rootMargin: '200px',
-    threshold: 0.1,
-  });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setWebglSupported(isWebGLAvailable());
-    }
-
-    const timer = setTimeout(() => setShowTooltip(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (isIntersecting && webglSupported) {
-      setEnable3D(true);
-    }
-  }, [isIntersecting, webglSupported]);
-
   // Handlers
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent(
-      'Olá! Gostaria de agendar uma consultoria gratuita para meu projeto.'
+      'Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.'
     );
-    window.open(`https://wa.me/5511999999999?text=${message}`, '_blank');
+    window.open(`https://wa.me/5511959766136?text=${message}`, '_blank');
   };
 
-  const handlePortfolioClick = () => {
-    const element = document.querySelector('#portfolio');
+  const handleServicesClick = () => {
+    const element = document.querySelector('#services');
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -106,24 +24,42 @@ const Hero: React.FC = () => {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const chooseQuality = () => {
-    if (typeof window === 'undefined') return 'low';
-    return window.innerWidth < 768 ? 'low' : 'high';
-  };
-
   return (
-    <section className="relative min-h-screen hero-gradient overflow-hidden">
-      {/* Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+    <section className="relative min-h-screen w-full max-w-full hero-gradient overflow-hidden">
+      {/* Background layers */}
+      <div
+        aria-hidden
+        className="absolute inset-0 z-0 bg-[linear-gradient(rgba(255,255,255,0.014)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.014)_1px,transparent_1px)] bg-[size:48px_48px]"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_42%,rgba(0,168,232,0.09),transparent_36%),radial-gradient(circle_at_18%_28%,rgba(0,168,232,0.08),transparent_30%),radial-gradient(circle_at_82%_72%,rgba(255,105,77,0.075),transparent_32%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2"
+      >
+        <div className="hero-glow-primary h-full w-full rounded-full bg-primary-blue/8 blur-3xl" />
+      </div>
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-28 bottom-12 z-0 h-80 w-80"
+      >
+        <div className="hero-glow-accent h-full w-full rounded-full bg-accent-coral/8 blur-3xl" />
+      </div>
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 z-0 h-32 bg-gradient-to-t from-bg-deep-start/70 to-transparent"
+      />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 items-center min-h-screen py-20">
-          {/* Left content */}
+        <div className="flex items-center min-h-screen py-20">
+          {/* Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="space-y-8 lg:pr-8"
+            className="space-y-8 max-w-2xl mx-auto text-center"
           >
             {/* Tagline */}
             <motion.div
@@ -132,7 +68,7 @@ const Hero: React.FC = () => {
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               <span className="inline-block px-4 py-2 bg-primary-blue-10 border border-primary-blue rounded-full text-primary-blue text-sm font-medium mb-6">
-                🚀 Consultoria Especializada
+                Desenvolvimento web &amp; mobile
               </span>
             </motion.div>
 
@@ -144,13 +80,13 @@ const Hero: React.FC = () => {
               className="text-4xl md:text-5xl xl:text-6xl font-bold leading-tight"
             >
               <div className="leading-tight">
-                <span className="text-white">
-                  Consultoria em 
-                </span>
-                <br />
-                <span className="text-primary-blue">desenvolvimento web</span>
-                <span className="text-white">&nbsp;e&nbsp;</span>
+                <span className="text-white">Sites, </span>
+                <span className="text-primary-blue">sistemas</span>
+                <span className="text-white"> e </span>
                 <span className="text-accent-coral">apps</span>
+                {' '}
+                <br className="hidden md:block" />
+                <span className="text-white">sob medida</span>
               </div>
             </motion.h1>
 
@@ -159,9 +95,10 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="text-xl text-white/80 leading-relaxed max-w-2xl"
+              className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto"
             >
-              Transformamos ideias em produtos digitais escaláveis
+              Do frontend ao deploy: interfaces modernas, APIs bem estruturadas
+              e sistemas prontos para crescer.
             </motion.p>
 
             {/* Feature list */}
@@ -169,27 +106,27 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="flex flex-wrap gap-4 text-white/70"
+              className="flex flex-wrap justify-center gap-4 text-white/70"
             >
               <div className="flex items-center gap-2">
                 <div
-                  className="w-2 h-2 rounded-full animate-pulse"
+                  className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: 'var(--color-primary-blue)' }}
                 />
-                <span>Experiência técnica</span>
+                <span>Frontend &amp; Backend</span>
               </div>
 
               <div className="flex items-center gap-2">
                 <div
-                  className="w-2 h-2 rounded-full animate-pulse"
+                  className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: 'var(--color-accent-coral)' }}
                 />
-                <span>Entregas ágeis</span>
+                <span>Web &amp; Mobile</span>
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-warm-orange rounded-full animate-pulse" />
-                <span>Integração mobile/web</span>
+                <div className="w-2 h-2 bg-warm-orange rounded-full" />
+                <span>Deploy &amp; Manutenção</span>
               </div>
             </motion.div>
 
@@ -198,7 +135,7 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 pt-4"
+              className="flex flex-col sm:flex-row justify-center gap-4 pt-4"
             >
               <Button
                 variant="cta"
@@ -207,16 +144,16 @@ const Hero: React.FC = () => {
                 className="group"
               >
                 <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                Agendar consultoria grátis
+                Iniciar um projeto
               </Button>
 
               <Button
                 variant="glass"
                 size="xl"
-                onClick={handlePortfolioClick}
+                onClick={handleServicesClick}
                 className="group"
               >
-                Ver portfólio
+                Ver serviços
                 <ArrowDown className="w-5 h-5 ml-2 group-hover:translate-y-1 transition-transform" />
               </Button>
             </motion.div>
@@ -225,65 +162,10 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.6 }}
-              className="text-sm text-white/60 italic pt-6"
+              className="text-sm text-white/50 pt-6"
             >
-              Tecnologia que potencializa seu produto — animações interativas e
-              desempenho otimizado
+              React · Next.js · Node.js · React Native · PostgreSQL · Docker
             </motion.p>
-          </motion.div>
-
-          {/* Right content: 3D demo area (responsiva) */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative w-full flex items-center justify-center"
-          >
-            {/* Limitador de largura: vai diminuir conforme a tela */}
-            <div className="w-full max-w-md sm:max-w-lg lg:max-w-none">
-              {/* Box com aspect ratio (75% => 4:3). Ajuste paddingTop para outro ratio se quiser */}
-              <div ref={threeRef} className="relative w-full" style={{ paddingTop: '75%' }}>
-                {/* glow azul atrás da bola */}
-                <div className="absolute -inset-6 z-0 rounded-full blur-3xl bg-primary-blue-20" />
-
-                {/* conteúdo absoluto que preenche o box (em cima do glow) */}
-                <div className="absolute inset-0 z-10 rounded-xl overflow-hidden flex items-center justify-center">
-                  {webglSupported === false && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="text-white/70 text-center px-4">
-                        <p className="mb-2 font-semibold">Visualização 3D indisponível</p>
-                        <p className="text-sm">Seu dispositivo ou navegador não suporta WebGL.</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {!enable3D && (
-                    <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-black/20 to-transparent">
-                      <div className="max-w-xs text-center text-white/60">
-                        <div className="h-48 w-48 mx-auto mb-4 rounded-full bg-primary-blue-10 animate-pulse" />
-                        <p className="mb-3 font-medium">Animação interativa</p>
-
-                        {webglSupported && (
-                          <button
-                            onClick={() => setEnable3D(true)}
-                            className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-white/8 text-white text-sm"
-                          >
-                            Ativar visualização 3D
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {enable3D && webglSupported && (
-                    /* ThreeDemo deve preencher o box e escalar automaticamente */
-                    <div className="w-full h-full">
-                      <ThreeDemo className="w-full h-full" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
           </motion.div>
         </div>
 

@@ -1,58 +1,46 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Heart, Mail, MessageCircle, Github, Linkedin } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import logo from '../assets/logo.svg';  
-import Image from 'next/image';
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Heart, Mail, MessageCircle } from 'lucide-react'
+import { Button } from '../components/ui/button'
+import logo from '../assets/logo.svg'
+import Image from 'next/image'
 
 const Footer: React.FC = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   const socialLinks = [
     {
-      icon: Github,
-      href: '#',
-      label: 'GitHub',
-      color: 'hover:text-white'
-    },
-    {
-      icon: Linkedin,
-      href: '#',
-      label: 'LinkedIn',
-      color: 'hover:text-primary-blue'
-    },
-    {
       icon: Mail,
-      href: 'mailto:contato@carvacode.com',
+      href: 'mailto:carvacodebr@gmail.com',
       label: 'Email',
-      color: 'hover:text-accent-coral'
-    }
-  ];
+      color: 'hover:text-accent-coral',
+    },
+  ]
 
   const quickLinks = [
     { label: 'Sobre', href: '#about' },
     { label: 'Serviços', href: '#services' },
-    { label: 'Portfólio', href: '#portfolio' },
-    { label: 'Contato', href: '#contact' }
-  ];
+    { label: 'Tecnologias', href: '#tecnologias' },
+    { label: 'Contato', href: '#contact' },
+  ]
 
   const handleLinkClick = (href: string) => {
     if (href.startsWith('#')) {
-      const element = document.querySelector(href);
-      element?.scrollIntoView({ behavior: 'smooth' });
+      const element = document.querySelector(href)
+      element?.scrollIntoView({ behavior: 'smooth' })
     } else if (href.startsWith('mailto:')) {
-      window.location.href = href;
+      window.location.href = href
     } else {
-      window.open(href, '_blank');
+      window.open(href, '_blank')
     }
-  };
+  }
 
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent('Olá! Gostaria de agendar uma consultoria gratuita.');
-    window.open(`https://wa.me/5511951614457?text=${message}`, '_blank');
-  };
+    const message = encodeURIComponent('Olá! Gostaria de marcar uma conversa inicial sobre meu projeto.')
+    window.open(`https://wa.me/5511959766136?text=${message}`, '_blank')
+  }
 
   return (
     <footer className="relative overflow-hidden bg-bg-deep-start">
@@ -61,7 +49,7 @@ const Footer: React.FC = () => {
         aria-hidden
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          background: ''
+          background: '',
         }}
       />
 
@@ -90,7 +78,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 relative z-20">
         {/* Main Footer Content */}
         <div className="py-16 border-b border-white/8">
-          <div className="grid lg:grid-cols-4 gap-12">
+          <div className="grid lg:grid-cols-4 gap-12 text-center lg:text-left">
             {/* Brand Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -99,16 +87,17 @@ const Footer: React.FC = () => {
               transition={{ duration: 0.6 }}
               className="lg:col-span-2"
             >
-              <div className="flex items-center space-x-3 mb-6">
-                <Image src={logo} alt="CarvaCode" className="h-10 w-auto" />
-                <span className="text-2xl font-bold text-primary-blue">
-                  CarvaCode
+              <div className="flex items-center justify-center lg:justify-start space-x-3 mb-6">
+                <Image src={logo} alt="" aria-hidden="true" className="h-10 w-auto" />
+                <span className="brand-wordmark text-2xl" aria-label="CarvaCode">
+                  <span className="brand-wordmark-carva">Carva</span>
+                  <span className="brand-wordmark-code">Code</span>
                 </span>
               </div>
 
-              <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-md">
-                Transformamos ideias em produtos digitais escaláveis.
-                Consultoria especializada em desenvolvimento web e apps.
+              <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-md mx-auto lg:mx-0">
+                Equipe técnica enxuta que desenvolve sites, sistemas e apps sob medida, do frontend
+                ao deploy.
               </p>
 
               <Button
@@ -118,7 +107,7 @@ const Footer: React.FC = () => {
                 className="group cursor-pointer"
               >
                 <MessageCircle className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                Falemos — agende uma consultoria
+                Falar com a equipe
               </Button>
             </motion.div>
 
@@ -154,15 +143,18 @@ const Footer: React.FC = () => {
               <h3 className="text-white font-semibold mb-6">Contato</h3>
               <div className="space-y-3">
                 <p className="text-white/70">
-                  <span className="text-white font-medium">WhatsApp:</span><br />
-                  (11) 95161-4457
+                  <span className="text-white font-medium">WhatsApp:</span>
+                  <br />
+                  (11) 95976-6136
                 </p>
                 <p className="text-white/70">
-                  <span className="text-white font-medium">Email:</span><br />
-                  contato@carvacode.com
+                  <span className="text-white font-medium">Email:</span>
+                  <br />
+                  carvacodebr@gmail.com
                 </p>
                 <p className="text-white/70">
-                  <span className="text-white font-medium">Horário:</span><br />
+                  <span className="text-white font-medium">Horário:</span>
+                  <br />
                   Seg-Sex 9h às 18h
                 </p>
               </div>
@@ -172,17 +164,17 @@ const Footer: React.FC = () => {
 
         {/* Bottom Footer */}
         <div className="py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
             {/* Copyright */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="flex items-center gap-2 text-white/60 text-sm"
+              className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 gap-y-1 text-white/60 text-sm max-w-xs sm:max-w-none"
             >
               <span>© {currentYear} CarvaCode. Feito com</span>
-              <Heart className="w-4 h-4 text-accent-coral animate-pulse" />
+              <Heart className="w-4 h-4 text-accent-coral animate-pulse flex-shrink-0" />
               <span>para impulsionar seu negócio.</span>
             </motion.div>
 
@@ -202,7 +194,7 @@ const Footer: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   className={`w-10 h-10 bg-white/5 hover:bg-white/10 rounded-lg flex items-center justify-center text-white/60 ${social.color} transition-all duration-300`}
                   aria-label={social.label}
-                >+
+                >
                   <social.icon className="w-5 h-5" />
                 </motion.button>
               ))}
@@ -211,7 +203,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

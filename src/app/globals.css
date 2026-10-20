@@ -4,6 +4,8 @@
    0) Variáveis globais + Aliases
    ------------------------- */
 :root {
+  color-scheme: light dark;
+
   /* Brand Colors */
   --color-primary-blue: #00a8e8;        /* hsl(196 81% 51%) */
   --color-primary-blue-glow: #33baf0;   /* hsl(196 81% 61%) */
@@ -64,6 +66,9 @@
   --color-card: #ffffff;
   --color-card-foreground: #121a22;
 
+  --color-muted: #f1f5fb;
+  --color-muted-foreground: #5b6b7f;
+
   --color-border: #e4eaf5;  /* hsl(214 32% 91%) */
   --color-input: #e4eaf5;
   --color-ring: var(--color-primary-blue);
@@ -80,6 +85,9 @@
 
   --color-card: #121a22;
   --color-card-foreground: #fafafa;
+
+  --color-muted: #121a22;
+  --color-muted-foreground: #9aa8ba;
 
   --color-border: #242c35;  /* hsl(213 25% 15%) */
   --color-input: #242c35;
@@ -98,16 +106,25 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    min-width: 360px; /* Garante que o body também não fique menor */
-    overflow-x: auto; /* Permite scroll horizontal se necessário */
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   html {
     scroll-behavior: smooth;
-    min-width: 360px; /* Limita a largura mínima da página */
+    max-width: 100%;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Títulos usam a fonte display (Sora) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sora), var(--font-inter), system-ui, sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -118,7 +135,16 @@
 
   .hero-gradient {
     background: var(--gradient-hero);
-    background-attachment: fixed;
+  }
+
+  .hero-glow-primary {
+    animation: hero-glow-primary 18s ease-in-out infinite;
+    will-change: opacity, transform;
+  }
+
+  .hero-glow-accent {
+    animation: hero-glow-accent 22s ease-in-out infinite;
+    will-change: opacity, transform;
   }
 
   .bg-grid-pattern {
@@ -130,24 +156,17 @@
   }
 
 .glass-card {
-  background: transparent;
-  backdrop-filter: blur(0px) saturate(100%);
-  -webkit-backdrop-filter: blur(0px) saturate(100%);
-  border: 1px solid #ffffff0a;
-  box-shadow: 0 0 0 transparent;
-  transition: all 0.3s ease;
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-card:hover {
-  background:
-    radial-gradient(1200px 400px at 20% 20%, #ff8c5005, transparent),
-    var(--gradient-glass);
-  backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  border-color: color-mix(in srgb, var(--color-primary-blue) 35%, var(--color-border));
   box-shadow:
-    0 4px 8px #00000030, /* sombra bem suave, quase imperceptível */
-    0 1px 0 #ffffff05 inset,
-    var(--shadow-glow-coral);
+    0 20px 50px -14px rgba(2, 6, 23, 0.16),
+    0 8px 20px -10px rgba(0, 168, 232, 0.14);
   transform: translateY(-6px);
 }
 
@@ -165,6 +184,51 @@
 
   .text-primary-blue { color: var(--color-primary-blue); }
   .text-accent-coral { color: var(--color-accent-coral); }
+
+  .brand-wordmark {
+    color: #f4fbff;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.08em;
+    font-family: var(--font-brand), var(--font-inter), system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-rendering: geometricPrecision;
+  }
+
+  .brand-wordmark-carva {
+    color: #f4fbff;
+    font-weight: 600;
+  }
+
+  .brand-wordmark-code {
+    color: var(--color-primary-blue);
+    font-weight: 800;
+  }
+
+  /* Texto com gradiente (títulos de destaque) */
+  .text-gradient-primary {
+    background: linear-gradient(90deg, var(--color-primary-blue), var(--color-primary-blue-glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .text-gradient-accent {
+    background: linear-gradient(90deg, var(--color-accent-coral), var(--color-warm-orange));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Sombra elegante para cards em hover */
+  .shadow-elegant {
+    box-shadow:
+      0 20px 50px -12px rgba(2, 6, 23, 0.18),
+      0 8px 20px -8px rgba(0, 168, 232, 0.12);
+  }
 
   .btn-cta {
     background: linear-gradient(90deg, var(--color-warm-orange), var(--color-accent-coral));
@@ -250,4 +314,33 @@
     transform: scaleX(1);
   }
 
+}
+
+@keyframes hero-glow-primary {
+  0%, 100% {
+    opacity: 0.9;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(18px, -14px, 0) scale(1.04);
+  }
+}
+
+@keyframes hero-glow-accent {
+  0%, 100% {
+    opacity: 0.8;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(-16px, 12px, 0) scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow-primary,
+  .hero-glow-accent {
+    animation: none;
+  }
 }
